@@ -2,6 +2,11 @@
 #include <iostream>
 #include <ctime>
 
+/*변경사항
+1초마다 랜덤으로 색깔이 바뀌게 만들었습니다.
+카운터를 만들어 주어 색깔이 5번 바뀐 후 크기가 바뀌게 만들었습니다
+*/
+
 SDL_Window* g_pWindow = 0;
 SDL_Renderer* g_pRenderer = 0;
 bool g_bRunning = false;
@@ -32,11 +37,13 @@ void render(){
   SDL_RenderPresent(g_pRenderer);
 }
 
+
+
 int main(int argc, char* args[])
 {
   int count = 0;
 
-  if(init("HelloSDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 200, 100, SDL_WINDOW_SHOWN)){
+  if(init("HelloSDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 200, 100, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)){
     g_bRunning = true;
   }
   else{
@@ -46,13 +53,7 @@ int main(int argc, char* args[])
 
   while(g_bRunning){
     if(count == 5){ // 카운터가 5가 넘었을때 크기가 바뀌게끔 만들었습니다.
-      if(init("HelloSDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,   640, 480, SDL_WINDOW_SHOWN))
-      {
-        g_bRunning = true;
-      }
-      else{
-        return 1;
-      }
+      SDL_SetWindowSize(g_pWindow, 640, 480);
     }
   
     ColorChange();// 색깔 함수를 호출 합니다
