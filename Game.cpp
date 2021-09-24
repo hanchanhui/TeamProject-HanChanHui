@@ -1,3 +1,7 @@
+// 변경사항
+//사진 한개를 더 추가해보았습니다
+
+
 #include "Game.h"
 
 bool Game::init(const char* title, int xpos, int ypos, int width, int height, int flags)
@@ -22,31 +26,23 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
     return false; // SDL 초기화 실패
   }
   m_bRunning = true;
-  /*
+  
   SDL_Surface* pTempSurface = SDL_LoadBMP("Assets/rider.bmp");
   m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
   SDL_FreeSurface(pTempSurface);
 
   SDL_QueryTexture(m_pTexture, NULL, NULL, &m_sourceRectangle.w, &m_sourceRectangle.h);
+  m_sourceRectangle.x = 0;
+  m_sourceRectangle.y = 0;
 
-  m_destinationRectangle.w = m_sourceRectangle.w;
-  m_destinationRectangle.h = m_sourceRectangle.h;
+  m_destinationRectangle.w = m_sourceRectangle.w = 50;
+  m_destinationRectangle.h = m_sourceRectangle.h = 50;
 
-  m_destinationRectangle.x = m_sourceRectangle.x = 0;
-  m_destinationRectangle.y = m_sourceRectangle.y = 0;
-  */
+  m_destinationRectangle.x = 100;
+  m_destinationRectangle.y = 100;
 
-  SDL_Surface* pTempSurface = SDL_LoadBMP("Assets/rider.bmp");
-  m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
-  SDL_FreeSurface(pTempSurface);
+  
 
-  SDL_QueryTexture(m_pTexture, NULL, NULL, &m_sourceRectangle.w, &m_sourceRectangle.h);
-
-  m_destinationRectangle.w = m_sourceRectangle.w;
-  m_destinationRectangle.h = m_sourceRectangle.h;
-
-  m_destinationRectangle.x = m_sourceRectangle.x = 0;
-  m_destinationRectangle.y = m_sourceRectangle.y = 0;
 
   return true;
 }
@@ -57,6 +53,7 @@ void Game::update(){
 
 void Game::render(){
   SDL_RenderClear(m_pRenderer);
+
 
   SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle);
   
