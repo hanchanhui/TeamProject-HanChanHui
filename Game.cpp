@@ -1,9 +1,8 @@
-// 변경사항
-//사진 한개를 더 추가해보았습니다
-
-
 #include "Game.h"
-#include "SDL_image.h"
+#include <SDL_image.h>
+#include <iostream>
+#include "TextureManager.h"
+
 
 bool Game::init(const char* title, int xpos, int ypos, int width, int height, int flags)
 {
@@ -15,7 +14,7 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
       
 
       if(m_pRenderer != 0){
-        SDL_SetRenderDrawColor(m_pRenderer, 255, 0, 0, 255); //붉은색 배경
+        SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, 255); 
       }else{
         return false; // 랜더러 생성 실패
       }
@@ -26,41 +25,43 @@ bool Game::init(const char* title, int xpos, int ypos, int width, int height, in
   else{
     return false; // SDL 초기화 실패
   }
-  m_bRunning = true;
   
-  SDL_Surface* pTempSurface = IMG_Load("Assets/animate-alpha.png");
-  m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
-  SDL_FreeSurface(pTempSurface);
+  if( !TheTextureManager::Instance()->load("Assets/animate-alpha.png", "animate", m_pRenderer))
+  {
+    return false;
+  }
 
-  m_sourceRectangle.w = 128;
-  m_sourceRectangle.h = 82;
+  GameObject* m_go = new GameObject();
+  GameObject* m_player = new Player();
 
-  m_destinationRectangle.w = m_sourceRectangle.w;
-  m_destinationRectangle.h = m_sourceRectangle.h;
-
-  m_destinationRectangle.x = 0;
-  m_destinationRectangle.y = 0;
-
-
+  m_go->load(100, 100, 128, 82, "animate");
+  m_player->load(300, 300, 128, 82, "animate");
+  m_gameObjects.push_back(m_go);
+  m_gameObjects.push_back(m_player);
+ 
+  m_bRunning = true;
   return true;
 }
 
-void Game::update(){
-  m_sourceRectangle.x = 128 * ( (SDL_GetTicks() / 50) % 6);
 
-  if(m_destinationRectangle.x < 500){
-    m_destinationRectangle.x++;
-  }else{
-    m_destinationRectangle.x = 0;
+void Game::update()
+{
+  for(int i = 0; i < m_gameObjects.size(); i++){
+    m_gameObjects[i]->update();
   }
-  
 }
 
-void Game::render(){
+void Game::render()
+{
   SDL_RenderClear(m_pRenderer);
 
-  SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle); // SDL_RenderCopy() 뒤에 NULL,NULL을 넣으면 화면을 가득 채운다
-  
+  for(int i = 0; i < m_gameObjects.size(); i++)
+  {
+    
+    m_gameObjects[i]->draw(m_pRenderer);
+    
+  }
+
   SDL_RenderPresent(m_pRenderer);
 }
 
@@ -68,10 +69,12 @@ bool Game::running(){
   return m_bRunning;
 }
 
-void Game::handleEvent(){
+void Game::handleEvent()// 조작를 사용하여 움직일수있게 만들었습니다.
+{
   SDL_Event event;
   if (SDL_PollEvent(&event)){
-    switch (event.type){
+    switch (event.type)
+    {
       case SDL_QUIT:
         m_bRunning = false;
         break;

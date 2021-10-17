@@ -1,4 +1,9 @@
 #include "SDL.h"
+#include "GameObject.h"
+#include "Player.h"
+#include <vector>
+
+
 
 class Game{
   public:
@@ -11,22 +16,18 @@ class Game{
     bool running();
     void handleEvent();
     void clean();
+    
+    
 
   private:
     SDL_Window* m_pWindow;
     SDL_Renderer* m_pRenderer;
+
+    std::vector<GameObject*> m_gameObjects;
+
     bool m_bRunning;
-
-  SDL_Texture* m_pTexture;
+    int m_currentFrame;
+     
   
-
-  //원본 사각형
-  SDL_Rect m_sourceRectangle;
-  
-
-  //대상 사각형
-  SDL_Rect m_destinationRectangle;
-  
-
 };
 
