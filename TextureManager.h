@@ -1,9 +1,5 @@
-
 #include "SDL.h"
 #include "map"
-
-
-
 
 class TextureManager {
   public:
